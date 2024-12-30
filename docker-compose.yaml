@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-container
+    command: mysqld --default-authentication-plugin=mysql_native_password --local-infile=1
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw-arkd
+      MYSQL_DATABASE: metrobus
+      MYSQL_USER: franco
+      MYSQL_PASSWORD: francoakronmetrobus
+    ports:
+      - "3306:3306" 
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./custom-my.cnf:/etc/mysql/conf.d/custom-my.cnf:ro
+    # Optionally, you can define a healthcheck or custom configuration
+    networks:
+      - mbak-network
+
+
+  python-app:
+    build: 
+      context: ./python-app
+      dockerfile: Dockerfile
+    container_name: arkon_franco_container
+    volumes:
+      - ./python-app:/app
+    #ports:
+    #  - "5000:5000"
+    depends_on:
+      - db
+    # Environment variables for connecting to MySQL
+    environment:
+      DB_HOST: db      # references the service name 'db'
+      DB_PORT: 3306
+      #DB_NAME: mydb
+      #DB_USER: myuser
+      #DB_PASS: mypassword
+
+    networks:
+      - mbak-network
+
+
+networks:
+  mbak-network:
+    driver: bridge
+
+volumes:
+  db_data:

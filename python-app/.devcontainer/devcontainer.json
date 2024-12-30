@@ -1,0 +1,24 @@
+{
+    "name": "My Dev Container",
+    "dockerFile": "../DockerFile",
+    "context": "..",
+
+    // "features": {
+    //  // Optional: add features like Node, Git, or other tools
+    //  // "ghcr.io/devcontainers/features/node:1": {}
+    //},
+    //"postCreateCommand": "pip install --no-cache-dir -r requirements.txt",
+    //"forwardPorts": [5000],  // If you have a web app running on 5000
+    //"remoteUser": "root"     // The default user inside the container (adjust as needed)
+    
+    // Automatically install VS Code extensions for this container
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-python.python",
+          "ms-python.debugpy"
+        ]
+      }
+    }
+  }
+  
